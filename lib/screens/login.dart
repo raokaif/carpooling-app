@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController password = TextEditingController();
   final GoogleSignIn googleSignIn = GoogleSignIn.instance;
   bool isInitialized = false;
+
+  //initialize the Google sign in
   Future<void> initSignIn() async {
     if (!isInitialized) {
       await googleSignIn.initialize(
@@ -27,9 +29,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  //sign in with google method
   Future<UserCredential> signInWithGoogle() async {
-    initSignIn();
-    final GoogleSignInAccount account = await googleSignIn.authenticate();
+    await initSignIn();
+    final GoogleSignInAccount? account = await googleSignIn.authenticate();
     if (account == null) {
       throw FirebaseAuthException(
         code: "sign in aborted by user",
@@ -61,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  //sign out from both google and firebase
   Future<void> signOut() async {
     await googleSignIn.signOut();
     await FirebaseAuth.instance.signOut();
