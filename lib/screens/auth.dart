@@ -28,71 +28,76 @@ class _AuthState extends State<Auth> {
     final isLogin = _currentIndex == 0;
 
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 60),
-          // Login / Signup switch with underline
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              GestureDetector(
-                onTap: () => _animateToPage(0),
-                child: Column(
-                  children: [
-                    Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: isLogin ? Colors.blue : Colors.grey,
-                      ),
+              SizedBox(height: 60),
+              // Login / Signup switch with underline
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () => _animateToPage(0),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: isLogin ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Container(
+                          height: 2,
+                          width: 60,
+                          color: isLogin ? Colors.blue : Colors.transparent,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 4),
-                    Container(
-                      height: 2,
-                      width: 60,
-                      color: isLogin ? Colors.blue : Colors.transparent,
+                  ),
+                  SizedBox(width: 40),
+                  GestureDetector(
+                    onTap: () => _animateToPage(1),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: !isLogin ? Colors.blue : Colors.grey,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Container(
+                          height: 2,
+                          width: 60,
+                          color: !isLogin ? Colors.blue : Colors.transparent,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(width: 40),
-              GestureDetector(
-                onTap: () => _animateToPage(1),
-                child: Column(
+
+              SizedBox(
+                height: 500,
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged:
+                      (index) => setState(() => _currentIndex = index),
                   children: [
-                    Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: !isLogin ? Colors.blue : Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Container(
-                      height: 2,
-                      width: 60,
-                      color: !isLogin ? Colors.blue : Colors.transparent,
-                    ),
+                    LoginPage(onSignUpTap: () => _animateToPage(1)),
+                    SignUpPage(onLoginTap: () => _animateToPage(0)),
                   ],
                 ),
               ),
             ],
           ),
-
-          SizedBox(
-            height: 500,
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) => setState(() => _currentIndex = index),
-              children: [
-                LoginPage(onSignUpTap: () => _animateToPage(1)),
-                SignUpPage(onLoginTap: () => _animateToPage(0)),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

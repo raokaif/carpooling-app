@@ -1,3 +1,4 @@
+import 'package:carpooling_app/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,10 +66,18 @@ class _SignUpPageState extends State<SignUpPage> {
         'email': email.text,
         'createdAt': Timestamp.now(),
       });
-
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Signup successful!')));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return Home();
+          },
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
