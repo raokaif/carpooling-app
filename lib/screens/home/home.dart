@@ -1,3 +1,6 @@
+import 'package:carpooling_app/constants/constants.dart';
+import 'package:carpooling_app/screens/home/offer_ride.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -9,103 +12,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DateTime _selectedDate = DateTime(2025, 4, 22);
-  TimeOfDay _selectedTime = TimeOfDay(hour: 10, minute: 0);
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
   final int _selectedIndex = 0;
-  final List<String> cities = [
-    "Abbottabad",
-    "Ahmadpur East",
-    "Ali Pur",
-    "Arifwala",
-    "Attock",
-    "Bahawalnagar",
-    "Bahawalpur",
-    "Bannu",
-    "Barkhan",
-    "Batkhela",
-    "Bhalwal",
-    "Bhakkar",
-    "Burewala",
-    "Chakwal",
-    "Charsadda",
-    "Chiniot",
-    "Chishtian",
-    "Chitral",
-    "Dadu",
-    "Daska",
-    "Dera Ghazi Khan",
-    "Dera Ismail Khan",
-    "Faisalabad",
-    "Ghotki",
-    "Gujranwala",
-    "Gujrat",
-    "Gwadar",
-    "Hafizabad",
-    "Hangu",
-    "Haripur",
-    "Hyderabad",
-    "Islamabad",
-    "Jacobabad",
-    "Jafarabad",
-    "Jalalpur Jattan",
-    "Jaranwala",
-    "Jatoi",
-    "Jhang",
-    "Jhelum",
-    "Kamalia",
-    "Kamoke",
-    "Karachi",
-    "Kasur",
-    "Kharian",
-    "Khairpur",
-    "Khushab",
-    "Kohat",
-    "Kot Addu",
-    "Kotli",
-    "Lahore",
-    "Larkana",
-    "Layyah",
-    "Lodhran",
-    "Loralai",
-    "Mandi Bahauddin",
-    "Mansehra",
-    "Mardan",
-    "Mian Channu",
-    "Mianwali",
-    "Mirpur",
-    "Mirpur Khas",
-    "Multan",
-    "Muzaffargarh",
-    "Muzaffarabad",
-    "Nawabshah",
-    "Nowshera",
-    "Okara",
-    "Pakpattan",
-    "Peshawar",
-    "Quetta",
-    "Rahim Yar Khan",
-    "Rawalpindi",
-    "Sadiqabad",
-    "Sahiwal",
-    "Sanghar",
-    "Sargodha",
-    "Sheikhupura",
-    "Shikarpur",
-    "Sialkot",
-    "Sibi",
-    "Skardu",
-    "Sukkur",
-    "Swabi",
-    "Swat",
-    "Tando Adam",
-    "Tando Allahyar",
-    "Tando Muhammad Khan",
-    "Turbat",
-    "Vehari",
-    "Wah Cantt",
-    "Zhob",
-    "Ziarat",
-  ];
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -132,11 +42,20 @@ class _HomeState extends State<Home> {
     }
   }
 
-  final TextEditingController _fromController = TextEditingController();
-  final TextEditingController _toController = TextEditingController();
+  bool showRide = false;
+
+  String? source;
+  String? destination;
 
   @override
   Widget build(BuildContext context) {
+    String selectedDateString =
+        "${_selectedDate.month.toString().padLeft(2, '0')}/"
+        "${_selectedDate.day.toString().padLeft(2, '0')}/"
+        "${_selectedDate.year}";
+
+    String selectedTimeString = _selectedTime.format(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -146,11 +65,10 @@ class _HomeState extends State<Home> {
             children: [
               SizedBox(height: 20),
               DropdownSearch<String>(
-                items: (f, c) => cities,
+                items: (f, c) => Constants.pakistanCities,
                 popupProps: PopupProps.menu(
                   showSearchBox: true,
                   searchFieldProps: TextFieldProps(
-                    controller: _fromController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey[100],
@@ -183,16 +101,17 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  source = value;
+                },
               ),
 
               SizedBox(height: 10),
               DropdownSearch<String>(
-                items: (f, c) => cities,
+                items: (f, c) => Constants.pakistanCities,
                 popupProps: PopupProps.menu(
                   showSearchBox: true,
                   searchFieldProps: TextFieldProps(
-                    controller: _toController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.grey[100],
@@ -224,7 +143,9 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  destination = value;
+                },
               ),
 
               SizedBox(height: 10),
@@ -244,7 +165,11 @@ class _HomeState extends State<Home> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.calendar_today, size: 20),
+                          const Icon(
+                            Icons.calendar_today,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
                           const SizedBox(width: 12),
                           Text(
                             "${_selectedDate.month.toString().padLeft(2, '0')}/"
@@ -274,7 +199,11 @@ class _HomeState extends State<Home> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.access_time, size: 20),
+                          const Icon(
+                            Icons.access_time,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
                           const SizedBox(width: 12),
                           Text(
                             _selectedTime.format(context),
@@ -293,7 +222,27 @@ class _HomeState extends State<Home> {
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (source == null || destination == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select city and date'),
+                          ),
+                        );
+                        return;
+                      }
+                      if (source == destination) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select different cities'),
+                          ),
+                        );
+                        return;
+                      }
+                      setState(() {
+                        showRide = true;
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(150, 60),
                       maximumSize: const Size(300, 80),
@@ -309,87 +258,146 @@ class _HomeState extends State<Home> {
                   ),
                   Spacer(),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (source == null || destination == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select city, date and time'),
+                          ),
+                        );
+                        return;
+                      }
+                      if (source == destination) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please select different cities'),
+                          ),
+                        );
+                        return;
+                      }
+
+                      offerRideSheet(
+                        context,
+                        source.toString(),
+                        destination.toString(),
+                        "${_selectedDate.month.toString().padLeft(2, '0')}/"
+                        "${_selectedDate.day.toString().padLeft(2, '0')}/"
+                        "${_selectedDate.year}",
+                        _selectedTime.format(context),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(150, 60),
                       maximumSize: const Size(300, 80),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(color: Colors.blue),
                       ),
-                      backgroundColor: Colors.blue[700],
+                      backgroundColor: Colors.white,
                     ),
                     child: Text(
                       'Offer a Ride',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.blue),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 20),
               Expanded(
-                child: ListView.builder(
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        SizedBox(height: 10),
-                        ListTile(
-                          shape: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color.fromARGB(255, 245, 245, 245),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(18)),
-                          ),
-                          leading: CircleAvatar(
-                            child: Image.asset('assets/images/person.png'),
-                          ),
-                          title: Text('name'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('car'),
-                              Row(
+                child: FutureBuilder(
+                  future:
+                      showRide
+                          ? FirebaseFirestore.instance
+                              .collection('rides')
+                              .where('source', isEqualTo: source)
+                              .where('destination', isEqualTo: destination)
+                              .where('date', isEqualTo: selectedDateString)
+                              .get()
+                          : FirebaseFirestore.instance
+                              .collection('rides')
+                              .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text('No rides found.'));
+                    }
+
+                    var a = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount: a.length,
+                      itemBuilder: (context, index) {
+                        var ride = a[index];
+                        return Column(
+                          children: [
+                            SizedBox(height: 10),
+                            ListTile(
+                              shape: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color.fromARGB(255, 245, 245, 245),
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(18),
+                                ),
+                              ),
+                              leading: CircleAvatar(
+                                child: Image.asset('assets/images/person.png'),
+                              ),
+                              title: Text('Name'),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('seats'),
-                                  SizedBox(width: 8),
-                                  Container(
-                                    color: Colors.grey,
-                                    height: 15,
-                                    width: 1,
+                                  Text(ride['carModel'].toString()),
+                                  Row(
+                                    children: [
+                                      Text(ride['seats'].toString()),
+                                      SizedBox(width: 8),
+                                      Container(
+                                        color: Colors.grey,
+                                        height: 15,
+                                        width: 1,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text('Rs.${ride['price'].toString()}'),
+                                      SizedBox(width: 8),
+                                      Container(
+                                        color: Colors.grey,
+                                        height: 15,
+                                        width: 1,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(ride['time'].toString()),
+                                    ],
                                   ),
-                                  SizedBox(width: 8),
-                                  Text('time'),
-                                  SizedBox(width: 8),
-                                  Container(
-                                    color: Colors.grey,
-                                    height: 15,
-                                    width: 1,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text('price'),
                                 ],
                               ),
-                            ],
-                          ),
-                          trailing: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(60, 40),
-                              maximumSize: const Size(150, 80),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                              trailing: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(60, 40),
+                                  maximumSize: const Size(150, 80),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  backgroundColor: Colors.blue[700],
+                                ),
+                                child: Text(
+                                  'Book',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                              backgroundColor: Colors.blue[700],
+                              isThreeLine: true,
                             ),
-                            child: Text(
-                              'Book',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          isThreeLine: true,
-                        ),
-                      ],
+                          ],
+                        );
+                      },
                     );
                   },
                 ),
