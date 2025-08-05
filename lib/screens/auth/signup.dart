@@ -1,4 +1,4 @@
-import 'package:carpooling_app/screens/home/home.dart';
+import 'package:carpooling_app/screens/main/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return Home();
+            return MainScreen();
           },
         ),
       );
@@ -96,6 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
             shrinkWrap: true,
             children: [
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: name,
                 decoration: InputDecoration(
                   labelText: 'Name',
