@@ -1,4 +1,4 @@
-import 'package:carpooling_app/screens/home/home.dart';
+import 'package:carpooling_app/screens/main/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return Home();
+            return MainScreen();
           },
         ),
       );
@@ -178,6 +178,14 @@ class _LoginPageState extends State<LoginPage> {
               child: OutlinedButton(
                 onPressed: () {
                   signInWithGoogle();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return MainScreen();
+                      },
+                    ),
+                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

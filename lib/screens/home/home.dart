@@ -1,7 +1,6 @@
 import 'package:carpooling_app/constants/constants.dart';
 import 'package:carpooling_app/screens/home/offer_ride.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -14,7 +13,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  final int _selectedIndex = 0;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -348,7 +346,7 @@ class _HomeState extends State<Home> {
                               leading: CircleAvatar(
                                 child: Image.asset('assets/images/person.png'),
                               ),
-                              title: Text('Name'),
+                              title: Text(ride['name'].toString()),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -403,29 +401,6 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_car),
-            label: 'My Rides',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.messenger_outline_rounded),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }

@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'package:carpooling_app/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void addRide({
   required BuildContext context,
@@ -15,9 +17,11 @@ void addRide({
 }) async {
   final navigator = Navigator.of(context);
   final scaffold = ScaffoldMessenger.of(context);
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
 
   try {
     await FirebaseFirestore.instance.collection('rides').add({
+      'name': userProvider.userName ?? 'Unknown User',
       'source': source,
       'destination': destination,
       'date': date,
