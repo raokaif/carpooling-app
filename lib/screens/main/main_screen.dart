@@ -1,5 +1,6 @@
 import 'package:carpooling_app/screens/home/home.dart';
 import 'package:carpooling_app/screens/profile/profile.dart';
+import 'package:carpooling_app/screens/rides/my_rides.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,12 +13,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    Home(),
-    Placeholder(),
-    Placeholder(),
-    Profile(),
-  ];
+  final List<Widget> _screens = [Home(), MyRides(), Placeholder(), Profile()];
 
   void _onItemTapped(int index) {
     setState(() {

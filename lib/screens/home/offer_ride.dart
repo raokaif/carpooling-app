@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:carpooling_app/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,12 @@ void addRide({
   final userProvider = Provider.of<UserProvider>(context, listen: false);
 
   try {
-    await FirebaseFirestore.instance.collection('rides').add({
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      throw Exception("User not logged in");
+    }
+    final docRef = await FirebaseFirestore.instance.collection('rides').add({
+      'userId': currentUser.uid,
       'name': userProvider.userName ?? 'Unknown User',
       'source': source,
       'destination': destination,
@@ -31,6 +35,7 @@ void addRide({
       'price': price,
       'createdAt': Timestamp.now(),
     });
+    await docRef.update({'rideId': docRef.id});
 
     navigator.pop();
     scaffold.showSnackBar(SnackBar(content: Text('Ride added successfully')));

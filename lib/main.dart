@@ -1,5 +1,7 @@
 import 'package:carpooling_app/providers/user_provider.dart';
 import 'package:carpooling_app/screens/auth/auth.dart';
+import 'package:carpooling_app/screens/main/main_screen.dart';
+import 'package:carpooling_app/screens/rides/my_rides.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
