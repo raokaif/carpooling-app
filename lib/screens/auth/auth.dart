@@ -1,5 +1,5 @@
-import 'package:carpooling_app/screens/login.dart';
-import 'package:carpooling_app/screens/signup.dart';
+import 'package:carpooling_app/screens/auth/login.dart';
+import 'package:carpooling_app/screens/auth/signup.dart';
 import 'package:flutter/material.dart';
 
 class Auth extends StatefulWidget {

@@ -1,4 +1,5 @@
-import 'package:carpooling_app/screens/auth.dart';
+// import 'package:carpooling_app/screens/auth.dart';
+import 'package:carpooling_app/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -17,9 +18,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Carpooling App',
-      theme: ThemeData(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(0, 0, 0, 255),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
-      home: Auth(),
+      home: Home(),
     );
   }
 }
