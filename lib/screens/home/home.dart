@@ -280,10 +280,8 @@ class _HomeState extends State<Home> {
                         context,
                         source.toString(),
                         destination.toString(),
-                        "${_selectedDate.month.toString().padLeft(2, '0')}/"
-                        "${_selectedDate.day.toString().padLeft(2, '0')}/"
-                        "${_selectedDate.year}",
-                        _selectedTime.format(context),
+                        selectedDateString,
+                        selectedTimeString,
                       );
                     },
                     style: ElevatedButton.styleFrom(
